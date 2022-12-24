@@ -84,6 +84,29 @@ impl Oat {
     pub fn timestamp(&self) -> u64 {
         self.luid >> 12
     }
+
+    /// Hashes the Oat using the given `Hasher` implementation and returns the result as a `String`.
+    ///
+    /// WARNING: The provided hash function might not be cryptographically secure.
+    /// Because the returned hash is just a u64, collisions are not unlikely (https://en.wikipedia.org/wiki/Birthday_attack).
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::collections::hash_map::RandomState;
+    /// use std::hash::{BuildHasher, Hasher};
+    /// use oats::oat::Oat;
+    ///
+    /// let oat = Oat::of(1, 0, 0);
+    /// let hasher = RandomState::new().build_hasher();
+    /// let hash = oat.hashed(hasher);
+    /// ```
+    pub fn hashed<H: Hasher>(&self, mut new: H) -> String {
+        self.hash(&mut new);
+        let hash = new.finish();
+
+        format!("{:X>2X}{}", self.node, encode_engine(&hash.to_le_bytes(), &ENGINE))
+    }
 }
 
 impl Hash for Oat {
@@ -92,9 +115,9 @@ impl Hash for Oat {
     /// # Examples
     ///
     /// ```
-    /// use oat::Oat;
+    /// use oats::oat::Oat;
     /// use std::collections::hash_map::RandomState;
-    /// use std::hash::{BuildHasher, Hasher};
+    /// use std::hash::{BuildHasher, Hash, Hasher};
     ///
     /// let oat = Oat::of(1, 0, 0);
     /// let mut hasher = RandomState::new().build_hasher();
