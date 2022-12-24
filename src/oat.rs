@@ -25,7 +25,7 @@ impl Oat {
     /// # Examples
     ///
     /// ```
-    /// use oat::Oat;
+    /// use oats::oat::Oat;
     ///
     /// let oat = Oat::of(1, 0xfff, 0xfffffffffffff);
     /// ```
