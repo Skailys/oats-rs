@@ -27,7 +27,7 @@ impl Oat {
     /// ```
     /// use oats::oat::Oat;
     ///
-    /// let oat = Oat::of(1, 0xfff, 0xfffffffffffff);
+    /// let oat = Oat::of(1, 0xfff, 0xfffffffffff);
     /// ```
     pub fn of(node: u8, seq: u16, timestamp: u64) -> Self {
         assert!(ctlz(seq) >= 16 - 12);
@@ -78,8 +78,8 @@ impl Oat {
     /// ```
     /// use oats::oat::Oat;
     ///
-    /// let oat = Oat::of(1, 0, 0xfffffffffffff);
-    /// assert_eq!(oat.timestamp(), 0xfffffffffffff);
+    /// let oat = Oat::of(1, 0, 0xfffffffffff);
+    /// assert_eq!(oat.timestamp(), 0xfffffffffff);
     /// ```
     pub fn timestamp(&self) -> u64 {
         self.luid >> 12
