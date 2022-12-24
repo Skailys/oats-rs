@@ -1,4 +1,4 @@
-use std::hash::Hasher;
+use std::hash::{Hash, Hasher};
 use std::intrinsics::ctlz;
 use base64::alphabet::URL_SAFE;
 use base64::encode_engine;
@@ -84,31 +84,28 @@ impl Oat {
     pub fn timestamp(&self) -> u64 {
         self.luid >> 12
     }
+}
 
-    /// Hashes the Oat using the given `Hasher` implementation and returns the result as a `String`.
+impl Hash for Oat {
+    /// Hashes the Oat using the given `Hasher` implementation.
     ///
     /// # Examples
     ///
     /// ```
+    /// use oat::Oat;
     /// use std::collections::hash_map::RandomState;
     /// use std::hash::{BuildHasher, Hasher};
-    /// use oats::oat::Oat;
     ///
     /// let oat = Oat::of(1, 0, 0);
-    /// let hasher = RandomState::new().build_hasher();
-    /// let hash = oat.hashed(hasher);
+    /// let mut hasher = RandomState::new().build_hasher();
+    /// oat.hash(&mut hasher);
     /// ```
-    pub fn hashed<H: Hasher>(&self, mut hasher: H) -> String {
+    fn hash<H: Hasher>(&self, state: &mut H) {
         // Write the locally unique identifier to the hasher.
-        hasher.write(&self.luid.to_le_bytes());
-
-        // Finish the hash and store the result.
-        let hash = hasher.finish();
-
-        // Format the hash and node as a string.
-        format!("{:X>2X}{}", &self.node, encode_engine(&hash.to_le_bytes(), &ENGINE))
+        state.write(&self.luid.to_le_bytes())
     }
 }
+
 
 impl ToString for Oat {
     /// Converts the Oat to a string representation.
