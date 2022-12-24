@@ -1,9 +1,6 @@
 #![feature(core_intrinsics)]
 #![feature(mem_copy_fn)]
 
-
-
-
 pub mod bowl;
 pub mod oat;
 pub mod region;
