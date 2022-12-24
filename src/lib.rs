@@ -1,8 +1,8 @@
 #![feature(core_intrinsics)]
 #![feature(mem_copy_fn)]
 
-use crate::bowl::{GenerationBehavior, WrappedBowl};
-use crate::region::Region;
+
+
 
 pub mod bowl;
 pub mod oat;
@@ -14,7 +14,6 @@ pub fn add(left: usize, right: usize) -> usize {
 
 #[cfg(test)]
 mod tests {
-    use crate::bowl::Bowl;
     use super::*;
 
     #[test]
@@ -24,9 +23,7 @@ mod tests {
     }
 
     mod bowl {
-        use std::collections::hash_map::DefaultHasher;
-        use std::hash::{BuildHasher, BuildHasherDefault, Hasher};
-        use crate::bowl::{Bowl, BuildHasherFallback, GenerationBehavior, WrappedBowl};
+        use crate::bowl::{Bowl, GenerationBehavior, WrappedBowl};
         use crate::oat::Oat;
 
         #[test]
@@ -54,7 +51,7 @@ mod tests {
             assert!(oats.windows(2).all(|window| window[0] < window[1]));
         }
 
-        fn test_wrapped_bowl_generate_definition(mut wrapped_bowl: WrappedBowl) {
+        fn test_wrapped_bowl_generate_definition(wrapped_bowl: WrappedBowl) {
             // Generate 10 Oat values
             let oats: Vec<Oat> = (0..4095).map(|_| wrapped_bowl.generate()).collect();
 
@@ -74,10 +71,6 @@ mod tests {
     }
 
     mod oat {
-        use std::collections::hash_map::DefaultHasher;
-        use std::intrinsics::ctlz;
-        use std::mem::size_of_val;
-        use crate::bowl::BuildHasherFallback;
         use crate::oat::Oat;
 
         #[test]
