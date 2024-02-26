@@ -1,5 +1,6 @@
 [package]
 name = "oats"
+description = "Short, unique ids without the hassle of random uuids."
 version = "0.1.0"
 edition = "2021"
 
