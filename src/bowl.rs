@@ -12,10 +12,14 @@ use crate::oat::Oat;
 // const EPOCH: u64 = 1577836800;
 pub type BuildHasherFallback = BuildHasherDefault<DefaultHasher>;
 
+/// Defines the behavior of generating new Oats
 #[derive(Debug, Copy, Clone, Ord, PartialOrd, Eq, PartialEq)]
 pub enum GenerationBehavior {
+    /// This option takes the current timestamp and increments seq id until it overflows and adds one to the timestamp.
     Lazy,
+    /// This is the default mode, it maintains the current timestamp like lazy until there are no free seq id's left, then it syncs the timestamp to the current time.
     Normal,
+    /// As long as there is no significant time change, the seq id will be incremented. If there is a time change, the seq id is reset and the new time is used.
     Realtime
 }
 
