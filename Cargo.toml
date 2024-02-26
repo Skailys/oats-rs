@@ -3,7 +3,23 @@ name = "oats"
 version = "0.1.0"
 edition = "2021"
 
+license = "AGPL-3.0"
+repository = "https://github.com/Skailys/oats-rs.git"
+documentation = "https://docs.rs/oats-rs"
+readme = "README.md"
+
+keywords = ["oats", "distributed-id", "simple", "auto-increment"]
+categories = ["development-tools", "data-structures", "algorithms"]
+
+include = [
+    "**/*.rs",
+    "Cargo.toml"
+]
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "oats"
 
 [dependencies]
 base64 = "0.20.0"
