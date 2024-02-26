@@ -146,3 +146,9 @@ impl ToString for Oat {
         format!("{:X>2X}{}", &self.node, encode_engine(&self.luid.to_le_bytes(), &ENGINE))
     }
 }
+
+impl Into<String> for Oat {
+    fn into(self) -> String {
+        self.to_string()
+    }
+}
