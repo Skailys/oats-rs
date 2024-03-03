@@ -1,3 +1,4 @@
+/// The region of the world in which a callsign is located.
 #[derive(Debug, Copy, Clone, Ord, PartialOrd, Eq, PartialEq)]
 pub enum Region {
     /// Solomon Islands

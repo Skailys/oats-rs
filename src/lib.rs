@@ -1,8 +1,15 @@
-#![feature(core_intrinsics)]
-#![feature(mem_copy_fn)]
+//! This crate provides a simple and efficient way to generate globally unique identifiers.
 
+// This feature is needed to get the number of leading zeros in a number.
+#![feature(core_intrinsics)]
+
+/// The bowl is used for generating Oat values in unified way.
 pub mod bowl;
+
+/// The oats are globally unique identifiers.
 pub mod oat;
+
+/// The region moduele contains predefined regions
 pub mod region;
 
 #[cfg(test)]
@@ -46,7 +53,6 @@ mod tests {
             assert!(oats.iter().all(|oat| oat.node() == 1));
 
             // Check that the Oat values have increasing sequence numbers
-
             assert!(oats.windows(2).all(|window| window[0].seq() < window[1].seq()));
 
             // Check if seq restarts
