@@ -1,7 +1,7 @@
 [package]
 name = "oats-rs"
 description = "Short, unique ids without the hassle of random uuids."
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 
 license = "AGPL-3.0"
