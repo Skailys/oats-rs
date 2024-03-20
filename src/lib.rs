@@ -14,8 +14,6 @@ pub mod region;
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     mod bowl {
         use crate::bowl::{Bowl, GenerationBehavior, WrappedBowl};
         use crate::oat::Oat;
@@ -53,7 +51,9 @@ mod tests {
             assert!(oats.iter().all(|oat| oat.node() == 1));
 
             // Check that the Oat values have increasing sequence numbers
-            assert!(oats.windows(2).all(|window| window[0].seq() < window[1].seq()));
+            assert!(oats
+                .windows(2)
+                .all(|window| window[0].seq() < window[1].seq()));
 
             // Check if seq restarts
             let oat = wrapped_bowl.generate();
@@ -72,6 +72,59 @@ mod tests {
             let s = oat.to_string();
 
             assert_eq!(s, "X1AwCIGvFTGAA");
+        }
+
+        #[test]
+        fn test_to_bytes() {
+            let oat = Oat::of(1, 3, 1671800400_000);
+            let b: [u8; 9] = oat.to_bytes();
+
+            assert_eq!(b, [1, 0x03, 0x0, 0x88, 0x1A, 0xF1, 0x53, 0x18, 0x0]);
+        }
+
+        #[test]
+        fn test_into_bytes() {
+            let oat = Oat::of(1, 3, 1671800400_000);
+            let b: [u8; 9] = oat.into();
+
+            assert_eq!(b, [1, 0x03, 0x0, 0x88, 0x1A, 0xF1, 0x53, 0x18, 0x0]);
+        }
+
+        #[test]
+        fn test_from_string() {
+            let oat = Oat::from_string("X1AwCIGvFTGAA").unwrap();
+
+            assert_eq!(oat.node(), 1);
+            assert_eq!(oat.seq(), 3);
+            assert_eq!(oat.timestamp(), 1671800400_000);
+        }
+
+        #[test]
+        fn test_from_string_unchecked() {
+            let oat = Oat::from_string_unchecked("X1AwCIGvFTGAA");
+
+            assert_eq!(oat.node(), 1);
+            assert_eq!(oat.seq(), 3);
+            assert_eq!(oat.timestamp(), 1671800400_000);
+        }
+
+        #[test]
+        fn test_from_bytes() {
+            let oat = Oat::from_bytes([1, 0x03, 0x0, 0x88, 0x1A, 0xF1, 0x53, 0x18, 0x0]);
+
+            assert_eq!(oat.node(), 1);
+            assert_eq!(oat.seq(), 3);
+            assert_eq!(oat.timestamp(), 1671800400_000);
+        }
+
+        #[test]
+        fn test_from_bytes_ref() {
+            let oat =
+                Oat::from_bytes_ref(&[1, 0x03, 0x0, 0x88, 0x1A, 0xF1, 0x53, 0x18, 0x0]).unwrap();
+
+            assert_eq!(oat.node(), 1);
+            assert_eq!(oat.seq(), 3);
+            assert_eq!(oat.timestamp(), 1671800400_000);
         }
     }
 }
