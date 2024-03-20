@@ -29,7 +29,7 @@ cargo add oats-rs
     assert_eq!(oat.node(), 1);
 ```
 
-### Syntax of oats
+### Syntax of Oats
 
 When using ToString, the Oat object is displayed in a mixed format that includes the node ID and a local unique identifier (LUID) with a timestamp and sequence ID. The LUID is encoded as a URL-safe base64 string without padding.
 
