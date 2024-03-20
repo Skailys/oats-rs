@@ -1,5 +1,5 @@
 use crate::oat::Oat;
-use std::{hint::spin_loop, sync::Mutex, time::SystemTime};
+use std::{hint::spin_loop, sync::{Arc, Mutex}, time::SystemTime};
 
 /// Defines the behavior of generating new Oats
 #[derive(Debug, Copy, Clone, Ord, PartialOrd, Eq, PartialEq)]
@@ -13,7 +13,8 @@ pub enum GenerationBehavior {
 }
 
 /// The WrappedBowl is a thread-safe wrapper around the Bowl.
-pub struct WrappedBowl(Mutex<Bowl>);
+#[derive(Debug, Clone)]
+pub struct WrappedBowl(Arc<Mutex<Bowl>>);
 
 impl WrappedBowl {
     /// Creates a new WrappedBowl instance with the given node id, generation behavior mode and optional epoch.
@@ -38,7 +39,7 @@ impl WrappedBowl {
     /// ```
 
     pub fn of(node: u8, mode: GenerationBehavior, epoch: Option<SystemTime>) -> Self {
-        WrappedBowl(Mutex::new(Bowl::of(node, mode, epoch)))
+        WrappedBowl(Arc::new(Mutex::new(Bowl::of(node, mode, epoch))))
     }
 
     /// Generates a new Oat value based on given parameters.
@@ -77,6 +78,7 @@ impl WrappedBowl {
 }
 
 /// The Bowl is used for generating Oat values in a unified way.
+#[derive(Debug, Clone, Copy)]
 pub(crate) struct Bowl {
     mode: GenerationBehavior,
     node: u8,
