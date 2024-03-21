@@ -3,7 +3,13 @@
 ![Used 'nightly' toolchain](https://img.shields.io/badge/toolchain-nightly-important)
 ![Version 0.2.1](https://img.shields.io/badge/version-0.2.1-informational)
 
-**Short, unique ids without the hassle of random uuids.**
+**Short, unique IDs without the hassle of random UUIDs in a multi-threaded enviroment.**
+
+The library was created to simplify the use of UUIDs in a multi-server environment. It was inspired by BinCheng's snowflake-rs library, but is designed to be simpler and only allows for up to 256 independent nodes. The library includes only the node ID, a 12-bit sequence number, and the duration since the provided timestamp (44 bits).
+
+This library also includes built-in support for multithreading, enabling the creation of a single WrappedBowl instance that can be used concurrently in multiple instances. Only call WrappedBowl::generate() to obtain a unique ID that is distinct from all other generated IDs in the world. The ID consists of 9 bytes: 1 byte for the node ID and 8 bytes for the local unique identifier. A string representation can also be rendered, which is up to 14 characters long.
+
+When using the Unix timestamp in milliseconds, the theoretical limit is Mon Jun 23 2527 06:20:44 UTC+0000 (Coordinated Universal Time). This should be sufficient for any long-running service.
 
 ## Thanks
 
