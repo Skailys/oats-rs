@@ -32,6 +32,12 @@ cargo add oats-rs
     
     let wrapped_bowl = WrappedBowl::of(1, GenerationBehavior::Normal, Some(SystemTime::now()));
     let oat = wrapped_bowl.generate();
+
+    /* To use this instance now in another thread just clone it */
+    let cloned_bowl = wrapped_bowl.clone();
+    handles.push(thread::spawn(move || {
+        cloned_bowl.generate();
+    }));
     
     assert_eq!(oat.node(), 1);
 ```
