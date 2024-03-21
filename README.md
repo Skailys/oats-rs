@@ -29,6 +29,7 @@ cargo add oats-rs
 ```rust
     use oats::bowl::{GenerationBehavior, WrappedBowl};
     use std::time::SystemTime;
+    use std::thread;
     
     let wrapped_bowl = WrappedBowl::of(1, GenerationBehavior::Normal, Some(SystemTime::now()));
     let oat = wrapped_bowl.generate();

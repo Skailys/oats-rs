@@ -16,7 +16,6 @@ pub mod region;
 mod tests {
     /// This module contains the implementation of the `bowl` module.
     mod bowl {
-        use std::sync::Arc;
         use std::thread;
 
         use crate::bowl::{Bowl, GenerationBehavior, WrappedBowl};
