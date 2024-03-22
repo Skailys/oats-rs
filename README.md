@@ -50,4 +50,6 @@ When using ToString, the Oat object is displayed in a mixed format that includes
 ```rust
     const ENGINE: FastPortable = FastPortable::from(&URL_SAFE, NO_PAD);
     format!("{:X>2X}{}", &self.node, encode_engine(&self luid.to_le_bytes(), &ENGINE))
+
+    // this would result in an alphanummeric string, like 28DGAD9mLmGAA
 ```
