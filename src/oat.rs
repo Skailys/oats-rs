@@ -44,8 +44,8 @@ impl Oat {
     /// let oat = Oat::of(1, 0xfff, 0xfffffffffff);
     /// ```
     pub fn of(node: u8, seq: u16, timestamp: u64) -> Self {
-        assert!(ctlz(seq) >= 16 - 12);
-        assert!(ctlz(timestamp) >= 64 - 44);
+        assert!(seq < (1 << 12));
+        assert!(timestamp < (1 << 44));
 
         let luid = (timestamp << 12) | seq as u64;
 
