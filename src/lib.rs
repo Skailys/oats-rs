@@ -154,5 +154,36 @@ mod tests {
             assert_eq!(oat.seq(), 3);
             assert_eq!(oat.timestamp(), 1671800400_000);
         }
+
+        /// Test the `from_bytes` method of the `Oat` struct with an invalid length.
+        #[test]
+        fn test_from_bytes_ref_invalid_length() {
+            let oat = Oat::from_bytes_ref(&[1, 0x03, 0x0, 0x88, 0x1A, 0xF1, 0x53, 0x18]);
+
+            assert!(oat.is_err());
+            assert_eq!(
+                oat.err().unwrap(),
+                crate::oat::ParseOatError::InvalidLUIDLength(8)
+            );
+        }
+
+        #[test]
+        #[should_panic]
+        fn test_of_invalid_seq_length() {
+            let oat = Oat::of(1, 1 << 12, 0);
+            assert_eq!(oat.node(), 1);
+            assert_eq!(oat.seq(), 0x1000);
+            assert_eq!(oat.timestamp(), 0);
+        }
+
+        #[test]
+        #[should_panic]
+        fn test_of_invalid_timestamp_length() {
+            let oat = Oat::of(1, 0xFF, 1 << 44);
+            assert_eq!(oat.node(), 1);
+            assert_eq!(oat.seq(), 0x1000);
+            assert_eq!(oat.timestamp(), 0);
+        }
+        
     }
 }
