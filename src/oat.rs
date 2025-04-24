@@ -2,7 +2,6 @@ use base64::alphabet::URL_SAFE;
 use base64::engine::fast_portable::{FastPortable, NO_PAD};
 use base64::{decode_engine, encode_engine, DecodeError};
 use std::hash::{Hash, Hasher};
-use std::intrinsics::ctlz;
 use std::num::ParseIntError;
 
 const ENGINE: FastPortable = FastPortable::from(&URL_SAFE, NO_PAD);

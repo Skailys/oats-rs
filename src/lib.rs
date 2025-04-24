@@ -1,8 +1,5 @@
 //! This crate provides a simple and efficient way to generate globally unique identifiers.
 
-// This feature is needed to get the number of leading zeros in a number.
-#![feature(core_intrinsics)]
-
 /// The bowl is used for generating Oat values in unified way.
 pub mod bowl;
 
