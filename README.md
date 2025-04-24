@@ -1,6 +1,6 @@
 # oats
 
-![Used 'nightly' toolchain](https://img.shields.io/badge/toolchain-nightly-important)
+![Used 'stable' toolchain](https://img.shields.io/badge/toolchain-stable-important)
 ![Version 0.3.0](https://img.shields.io/badge/version-0.3.0-informational)
 
 **Short, unique IDs without the hassle of random UUIDs in a multi-threaded enviroment.**
@@ -10,6 +10,8 @@ The library was created to simplify the use of UUIDs in a multi-server environme
 This library also includes built-in support for multithreading, enabling the creation of a single WrappedBowl instance that can be used concurrently in multiple instances. Just call `WrappedBowl::generate()` to obtain a unique ID that is distinct from all other generated IDs in the world. The ID consists of 9 bytes: 1 byte for the node ID and 8 bytes for the local unique identifier. A string representation can also be rendered, which is up to 14 characters long.
 
 When using the Unix timestamp in milliseconds, the theoretical limit is Mon Jun 23 2527 06:20:44 UTC+0000 (Coordinated Universal Time). This should be sufficient for any long-running service.
+
+**The required toolchain is now downgraded to stable :3**
 
 ## Thanks to
 
