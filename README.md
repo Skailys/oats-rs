@@ -1,7 +1,7 @@
 # oats
 
 ![Used 'nightly' toolchain](https://img.shields.io/badge/toolchain-nightly-important)
-![Version 0.2.1](https://img.shields.io/badge/version-0.2.1-informational)
+![Version 0.3.0](https://img.shields.io/badge/version-0.3.0-informational)
 
 **Short, unique IDs without the hassle of random UUIDs in a multi-threaded enviroment.**
 

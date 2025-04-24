@@ -1,10 +1,7 @@
-use base64::alphabet::URL_SAFE;
-use base64::engine::fast_portable::{FastPortable, NO_PAD};
-use base64::{decode_engine, encode_engine, DecodeError};
+use base64::engine::general_purpose::URL_SAFE_NO_PAD;
+use base64::{DecodeError, Engine};
 use std::hash::{Hash, Hasher};
 use std::num::ParseIntError;
-
-const ENGINE: FastPortable = FastPortable::from(&URL_SAFE, NO_PAD);
 
 /// A struct that represents an Oat.
 pub struct Oat {
@@ -81,7 +78,7 @@ impl Oat {
     pub fn from_string(string: &str) -> Result<Self, ParseOatError> {
         let node = u8::from_str_radix(&string[0..2].replace('X', "0"), 16)
             .map_err(ParseOatError::InvalidNode)?;
-        let luid = decode_engine(&string[2..], &ENGINE).map_err(ParseOatError::InvalidLUIDForm)?;
+        let luid = URL_SAFE_NO_PAD.decode(&string[2..]).map_err(ParseOatError::InvalidLUIDForm)?;
 
         if luid.len() != 8 {
             return Err(ParseOatError::InvalidLUIDLength(luid.len()));
@@ -112,7 +109,7 @@ impl Oat {
     /// Incorrect input may lead to undefined behavior.
     pub fn from_string_unchecked(string: &str) -> Self {
         let node = u8::from_str_radix(&string[0..2].replace('X', "0"), 16).unwrap();
-        let luid = decode_engine(&string[2..], &ENGINE).unwrap();
+        let luid = URL_SAFE_NO_PAD.decode(&string[2..]).unwrap();
 
         let mut luid_bytes = [0; 8];
         luid_bytes.copy_from_slice(&luid);
@@ -230,7 +227,7 @@ impl Oat {
         format!(
             "{:X>2X}{}",
             self.node,
-            encode_engine(&hash.to_le_bytes(), &ENGINE)
+            URL_SAFE_NO_PAD.encode(&hash.to_le_bytes())
         )
     }
 }
@@ -271,7 +268,7 @@ impl ToString for Oat {
         format!(
             "{:X>2X}{}",
             &self.node,
-            encode_engine(&self.luid.to_le_bytes(), &ENGINE)
+            URL_SAFE_NO_PAD.encode(&self.luid.to_le_bytes())
         )
     }
 }
