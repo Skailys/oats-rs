@@ -9,6 +9,12 @@ pub mod oat;
 /// The region moduele contains predefined regions
 pub mod region;
 
+/// The node id as a new more complexe ID system
+pub mod nodeid;
+
+/// This handles version conflicts
+pub mod version;
+
 #[cfg(test)]
 mod tests {
     /// This module contains the implementation of the `bowl` module.
@@ -185,5 +191,54 @@ mod tests {
             assert_eq!(oat.timestamp(), 0);
         }
         
+    }
+
+    mod id {
+        use crate::nodeid::NodeID;
+
+        #[test]
+        fn test_new() {
+            let id = NodeID::new(24, 42);
+            assert_eq!(id.datacenter_id(), 24);
+            assert_eq!(id.node_id(), 42);
+        }
+
+        #[test]
+        fn test_from_id() {
+            let id = NodeID::from_id(0b00011000_00101010);
+            assert_eq!(id.datacenter_id(), 0b00011000);
+            assert_eq!(id.node_id(), 0b00101010);
+        }
+
+        #[test]
+        fn test_from_shorted_id() {
+            let id = NodeID::from_shorted_id(0b0100_0010);
+            assert_eq!(id.datacenter_id(), 0b0100);
+            assert_eq!(id.node_id(), 0b0010);
+        }
+
+        #[test]
+        fn test_id() {
+            let id = NodeID::new(24, 42)
+                .id();
+
+            assert_eq!(id, 0b00011000_00101010);
+        }
+
+        #[test]
+        fn test_shorted_id() {
+            let id = NodeID::new(4, 2)
+                .shorted_id().unwrap();
+
+            assert_eq!(id, 0b0100_0010);
+        }
+
+        #[test]
+        fn test_shorted_id_too_long() {
+            let id = NodeID::new(42, 2)
+                .shorted_id();
+
+            assert!(id.is_err());
+        }
     }
 }

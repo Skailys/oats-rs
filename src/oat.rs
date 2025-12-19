@@ -3,10 +3,12 @@ use base64::{DecodeError, Engine};
 use std::hash::{Hash, Hasher};
 use std::num::ParseIntError;
 
+use crate::nodeid::NodeID;
+
 /// A struct that represents an Oat.
 pub struct Oat {
     /// The node for the Oat.
-    node: u8,
+    node: NodeID,
     /// The locally unique identifier for the Oat.
     luid: u64,
 }
@@ -39,21 +41,27 @@ impl Oat {
     ///
     /// let oat = Oat::of(1, 0xfff, 0xfffffffffff);
     /// ```
+    #[deprecated(since="0.4.0", note="Please use Oat::new() instead.")]
     pub fn of(node: u8, seq: u16, timestamp: u64) -> Self {
         assert!(seq < (1 << 12));
         assert!(timestamp < (1 << 44));
 
+        let node = NodeID::from_shorted_id(node);
         let luid = (timestamp << 12) | seq as u64;
 
         Oat { node, luid }
     }
 
+    // TODO: Add new() for creating an Oat with a NodeID directly
+    
     pub fn to_bytes(&self) -> [u8; 9] {
         let mut bytes = [0; 9];
-        bytes[0] = self.node;
+        bytes[0] = self.node.node_id();
         bytes[1..].copy_from_slice(&self.luid.to_le_bytes());
         bytes
     }
+
+    // TODO: to_bytes_long() -> [u8; 10]
 
     /// Parses a string representation of an Oat and returns a new Oat instance.
     ///
@@ -88,7 +96,7 @@ impl Oat {
         luid_bytes.copy_from_slice(&luid);
 
         Ok(Oat {
-            node,
+            node: NodeID::new(0, node),
             luid: u64::from_le_bytes(luid_bytes),
         })
     }
@@ -115,7 +123,7 @@ impl Oat {
         luid_bytes.copy_from_slice(&luid);
 
         Oat {
-            node,
+            node: NodeID::new(0, node),
             luid: u64::from_le_bytes(luid_bytes),
         }
     }
@@ -144,7 +152,7 @@ impl Oat {
     /// ```
     pub fn from_bytes(bytes: [u8; 9]) -> Self {
         Oat {
-            node: bytes[0],
+            node: NodeID::new(0, bytes[0]),
             luid: u64::from_le_bytes(bytes[1..].try_into().unwrap()),
         }
     }
@@ -155,7 +163,7 @@ impl Oat {
         }
 
         Ok(Oat {
-            node: bytes[0],
+            node: NodeID::new(0, bytes[0]),
             luid: u64::from_le_bytes(bytes[1..].try_into().unwrap()),
         })
     }
@@ -173,7 +181,7 @@ impl Oat {
     /// assert_eq!(oat.node(), 1);
     /// ```
     pub fn node(&self) -> u8 {
-        self.node
+        self.node.node_id()
     }
 
     /// Returns the sequence number for the Oat.
@@ -220,13 +228,14 @@ impl Oat {
     /// let hasher = RandomState::new().build_hasher();
     /// let hash = oat.hashed(hasher);
     /// ```
+    #[deprecated(since="0.4.0", note="Not safe to use if long NodeID is used!")]
     pub fn hashed<H: Hasher>(&self, mut new: H) -> String {
         self.hash(&mut new);
         let hash = new.finish();
 
         format!(
             "{:X>2X}{}",
-            self.node,
+            self.node.node_id(),
             URL_SAFE_NO_PAD.encode(&hash.to_le_bytes())
         )
     }
@@ -267,7 +276,7 @@ impl ToString for Oat {
         // Format the locally unique identifier and node as a string.
         format!(
             "{:X>2X}{}",
-            &self.node,
+            &self.node.node_id(),
             URL_SAFE_NO_PAD.encode(&self.luid.to_le_bytes())
         )
     }
@@ -311,7 +320,7 @@ impl Into<[u8; 9]> for Oat {
     /// ```
     fn into(self) -> [u8; 9] {
         let mut bytes = [0; 9];
-        bytes[0] = self.node;
+        bytes[0] = self.node.node_id();
         bytes[1..].copy_from_slice(&self.luid.to_le_bytes());
         bytes
     }

@@ -1,4 +1,5 @@
 /// The region of the world in which a callsign is located.
+#[deprecated(since="0.4.0", note="Please use your own ID system for Datacenter and Mode IDs.")]
 #[derive(Debug, Copy, Clone, Ord, PartialOrd, Eq, PartialEq)]
 pub enum Region {
     /// Solomon Islands
